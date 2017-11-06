@@ -1,6 +1,6 @@
-#include <ProjLib.h>
+#include "ProjLib.h"
 
-#define LED_PIN 3
+#define LED_DATA_PIN 3
 
 enum class Ctrl: uint8_t {
     menu = 0,
