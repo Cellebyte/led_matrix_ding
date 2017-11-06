@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../util.h"
 
 #include "FastLED.h"
@@ -11,18 +13,14 @@ namespace hw {
 
     class LEDMatrix {
     public:
-        LEDMatrix(uint8_t pin): pin(pin) {}
+        LEDMatrix(){}
 
         NO_COPY_INSTANCE(LEDMatrix)
 
-        uint8_t setup() {
-            //TODO: unimplemented
-        }
-        uint8_t loop() {
-            //TODO: unimplemented
-        }
+        uint8_t setup();
+        uint8_t loop();
     private:
-        const uint8_t pin;
+
     };
 
 }
