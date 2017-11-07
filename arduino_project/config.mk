@@ -1,0 +1,20 @@
+### ARDUINO_DIR
+### Path to the Arduino application and resources directory.
+### On OS X:
+#ARDUINO_DIR       = /Applications/Arduino.app/Contents/Java
+### or on Linux: (remove the one you don't want)
+ARDUINO_DIR       = /home/felix/Programs/arduino-1.8.5
+
+### AVR_TOOLS_DIR
+### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
+### On OS X with `homebrew`:
+#AVR_TOOLS_DIR     = /usr/local
+### or on Linux: (remove the one you don't want)
+AVR_TOOLS_DIR     = /usr
+
+### AVRDUDE
+### Path to avrdude directory.
+### On OS X with `homebrew`:
+#AVRDUDE          = /usr/local/bin/avrdude
+### or on Linux: (remove the one you don't want)
+AVRDUDE          = /usr/bin/avrdude
