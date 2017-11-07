@@ -31,4 +31,5 @@
 *.out
 *.app
 
-**/bin/
+arduino_project/bin/
+arduino_project/config.mk

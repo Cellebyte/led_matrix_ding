@@ -4,6 +4,8 @@
 ### to https://github.com/sudar/Arduino-Makefile/blob/master/arduino-mk-vars.md
 ### Original project where this Makefile comes from: https://github.com/WeAreLeka/Bare-Arduino-Project
 
+include config.mk
+
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
 PROJECT_DIR       = $(shell pwd)
@@ -12,17 +14,9 @@ PROJECT_DIR       = $(shell pwd)
 ### Path to the Arduino-Makefile directory.
 ARDMK_DIR         = $(PROJECT_DIR)/Arduino-Makefile
 
-### ARDUINO_DIR
-### Path to the Arduino application and resources directory.
-### On OS X:
-#ARDUINO_DIR       = /Applications/Arduino.app/Contents/Java
-### or on Linux: (remove the one you don't want)
-ARDUINO_DIR       = /home/felix/Programs/arduino-1.8.5
-
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
 USER_LIB_PATH    :=  $(PROJECT_DIR)/lib
-
 
 ### ARDUINO_LIBS
 ### Arduino Libs used by the project
@@ -35,20 +29,6 @@ BOARD_TAG         = uno
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
 MONITOR_BAUDRATE  = 9600
-
-### AVR_TOOLS_DIR
-### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
-### On OS X with `homebrew`:
-#AVR_TOOLS_DIR     = /usr/local
-### or on Linux: (remove the one you don't want)
-AVR_TOOLS_DIR     = /usr
-
-### AVRDUDE
-### Path to avrdude directory.
-### On OS X with `homebrew`:
-#AVRDUDE          = /usr/local/bin/avrdude
-### or on Linux: (remove the one you don't want)
-AVRDUDE          = /usr/bin/avrdude
 
 ### CFLAGS_STD
 ### Set the C standard to be used during compilation. Documentation (https://github.com/WeAreLeka/Arduino-Makefile/blob/std-flags/arduino-mk-vars.md#cflags_std)
