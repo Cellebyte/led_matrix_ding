@@ -43,10 +43,6 @@ CXXFLAGS_STD      = -std=gnu++11
 #CXXFLAGS         += -pedantic -Wall -Wextra
 CXXFLAGS         += -Wall -Wextra
 
-### MONITOR_PORT
-### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-MONITOR_PORT      = /dev/tty.usbmodem*
-
 ### CURRENT_DIR
 ### Do not touch - used for binaries path
 CURRENT_DIR       = $(shell basename $(CURDIR))

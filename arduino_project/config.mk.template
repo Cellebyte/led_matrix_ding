@@ -5,6 +5,7 @@
 ### or on Linux: (remove the one you don't want)
 ARDUINO_DIR       = /home/felix/Programs/arduino-1.8.5
 
+
 ### AVR_TOOLS_DIR
 ### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
 ### On OS X with `homebrew`:
@@ -18,3 +19,9 @@ AVR_TOOLS_DIR     = /usr
 #AVRDUDE          = /usr/local/bin/avrdude
 ### or on Linux: (remove the one you don't want)
 AVRDUDE          = /usr/bin/avrdude
+
+AVRDUDE_CONF	 = $(ARDUINO_DIR)/hardware/tools/avr/etc/avrdude.conf
+
+### MONITOR_PORT
+### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
+MONITOR_PORT      = /dev/ttyACM0
