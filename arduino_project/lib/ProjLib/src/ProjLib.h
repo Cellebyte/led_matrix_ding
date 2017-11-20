@@ -6,3 +6,4 @@
 #include "hw/led_matrix/led_matrix.h"
 #include "hw/buttons/buttons.h"
 #include "ctrl/menu/menu.h"
+#include "ctrl/snake/snake.h"

@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 #define NO_COPY_INSTANCE(cls) \
 cls(const cls&);\
