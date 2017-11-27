@@ -1,6 +1,5 @@
-#include "ProjLib.h"
 
-#define LED_DATA_PIN 3
+#include "ProjLib.h"
 
 enum class Ctrl: uint8_t {
     menu = 0,
@@ -13,12 +12,11 @@ volatile Ctrl active_ctrl = Ctrl::menu;
 
 hw::LEDMatrix led_matrix = hw::LEDMatrix();
 hw::Buttons buttons = hw::Buttons();
-ctrl::MenuCtrl menu_ctrl = ctrl::MenuCtrl();
+ctrl::MenuCtrl menu_ctrl = ctrl::MenuCtrl(led_matrix, buttons);
 
 void setup() {
     led_matrix.setup();
     buttons.setup();
-
     menu_ctrl.setup();
 }
 
