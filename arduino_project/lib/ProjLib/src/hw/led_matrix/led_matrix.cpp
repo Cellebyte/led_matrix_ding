@@ -37,9 +37,6 @@ uint8_t hw::LEDMatrix::show_rect(
         return 1;
     }
 
-    //TODO: unimplemented
-    //draw the points
-
     for(uint8_t x_i = x; x_i < x + rect.width; x_i++) {
         for(uint8_t y_i = x; y_i < y + rect.height; y_i++) {
             set_pixel(x_i, y_i, rect.color);
