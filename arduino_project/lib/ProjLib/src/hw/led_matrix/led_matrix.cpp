@@ -4,7 +4,7 @@ CRGB leds[NUM_LEDS];
 
 uint8_t hw::LEDMatrix::setup()
 {
-    FastLED.addLeds<WS2812B, LED_DATA_PIN, RGB>(leds, NUM_LEDS, 0); // 0 offset
+    FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS, 0); // 0 offset
     return 0;
 }
 
@@ -20,7 +20,6 @@ uint8_t hw::LEDMatrix::set_pixel(
     }
 
     leds[y * LED_COLUMNS + x] = color;
-
     return 0;
 }
 

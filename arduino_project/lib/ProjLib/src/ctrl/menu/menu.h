@@ -20,15 +20,18 @@ namespace ctrl {
 
         uint8_t setup()
         {
+
             //TODO: unimplemented
             return 0;
         }
         uint8_t loop() {
             //TODO: unimplemented
-            hw::LEDMatrix::Rect r = hw::LEDMatrix::Rect {
-                1, 1, CRGB::Red
-            };
-            led_matrix.show_rect(0,0, r);
+            //hw::LEDMatrix::Rect r = hw::LEDMatrix::Rect {
+            //    1, 1, CRGB::Red
+            //};
+            //led_matrix.show_rect(0,0, r);
+            //for (int i=0)
+            led_matrix.set_pixel(0,0,CRGB::Blue);
             return 0;
         }
     private:

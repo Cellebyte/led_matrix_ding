@@ -1,51 +1,44 @@
-
 #include "ProjLib.h"
 
-enum class Ctrl: uint8_t {
-    menu = 0,
-    clock,
-    pong,
-    rainbow,
-    snake
-};
-volatile Ctrl active_ctrl = Ctrl::menu;
+hw::LEDMatrix led_matrix;
+hw::Buttons buttons(4,5,6,7,8,9,10,11);
 
-// uses pin 3
-hw::LEDMatrix led_matrix = hw::LEDMatrix();
-// button pins
-hw::Buttons buttons = hw::Buttons(4,5,6,7,8,9,10,11);
-ctrl::MenuCtrl menu_ctrl = ctrl::MenuCtrl(led_matrix, buttons);
+int v = 0;
 
-void setup() {
-    Serial.begin(9600);
-    while (!Serial) { ; }
-    led_matrix.setup();
+void setup() { 
     buttons.setup();
-    menu_ctrl.setup();
-    pinMode(13, OUTPUT);
+    led_matrix.setup();
+    //  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
+
 }
 
-void loop() {
-    // update HW
-    led_matrix.loop();
+void loop() { 
     buttons.loop();
-
-    digitalWrite(13, HIGH);
-    delay(100);
-
-    uint8_t btns = buttons.get_state();
-
-    char s[16];
-    sprintf(s, "S: %02X", btns);
-    Serial.println(s);
-
-    digitalWrite(13, LOW);
-    delay(100);
-
-    // update controllers
-    switch(active_ctrl) {
-        case Ctrl::menu : menu_ctrl.loop(); break;
-        default: break;
+    led_matrix.loop();
+    //led_matrix.set_pixel(0,0,v ? CRGB::Blue : CRGB::Red);
+    hw::Buttons::State state = buttons.get_state();
+    if(state & hw::Buttons::State::BTN_A0) {
+        led_matrix.set_pixel(1,0, CRGB::Yellow);    
+    } else {
+        led_matrix.set_pixel(1,0, CRGB::Green);
     }
-
+    if(state & hw::Buttons::State::BTN_A1) {
+        led_matrix.set_pixel(2,0, CRGB::Purple);    
+    } else {
+        led_matrix.set_pixel(2,0, CRGB::Red);
+    }
+    //led_matrix.show_rect(0,1, hw::LEDMatrix::Rect{ 3, 1, CRGB::Yellow});
+    v^=1;
+    //delay(500);
+    
+/*
+  // Turn the LED on, then pause
+  leds[0] = CRGB::Red;
+  FastLED.show();
+  delay(500);
+  // Now turn the LED off, then pause
+  leds[0] = CRGB::Black;
+  FastLED.show();
+  delay(500);
+  */
 }
