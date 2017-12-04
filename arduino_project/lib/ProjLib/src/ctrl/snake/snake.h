@@ -1,6 +1,8 @@
 #pragma once
+#include <Arduino.h>
 #include "../../util.h"
-
+#include <stdint.h>
+#include "../../hw/led_matrix/led_matrix.h"
 namespace snake
 {
 
@@ -22,8 +24,8 @@ class SnakeCtrl
         uint8_t ypos;
         uint8_t direction;
         uint8_t length;
-        uint8_t headcolor;
-        uint8_t bodycolor;
+        const CRGB headcolor;
+        const CRGB bodycolor;
     } SNAKE;
     struct food
     {

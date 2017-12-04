@@ -1,11 +1,14 @@
 #include "snake.h"
-#include <Arduino.h>
+
 uint8_t snake::SnakeCtrl::setup()
 {
+    SNAKE.headcolor = CRGB::Red;
+    SNAKE.bodycolor = CRGB::Green;
     SNAKE.xpos = mapwidth / 2;
     SNAKE.ypos = mapheight / 2;
     SNAKE.length = 3;
     SNAKE.direction = 0;
+
     // Set Snake head onto the printMap
     map[SNAKE.xpos][SNAKE.ypos] = 1;
     // Places top and bottom walls
