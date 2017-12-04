@@ -21,6 +21,7 @@ namespace ctrl {
         uint8_t setup()
         {
             //TODO: unimplemented
+            return 0;
         }
         uint8_t loop() {
             //TODO: unimplemented
@@ -28,6 +29,7 @@ namespace ctrl {
                 1, 1, CRGB::Red
             };
             led_matrix.show_rect(0,0, r);
+            return 0;
         }
     private:
         hw::LEDMatrix &led_matrix;
