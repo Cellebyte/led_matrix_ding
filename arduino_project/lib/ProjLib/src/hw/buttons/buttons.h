@@ -24,7 +24,7 @@ namespace hw {
                 pin_b0, pin_b1, pin_b2, pin_b3 }
         {}
 
-        NO_COPY_INSTANCE(Buttons)
+        NO_COPY_INSTANCE(Buttons);
 
         enum State: uint8_t {
             None = 0,

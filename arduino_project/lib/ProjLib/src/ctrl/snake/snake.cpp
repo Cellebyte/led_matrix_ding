@@ -1,6 +1,6 @@
 #include "snake.h"
 
-uint8_t snake::SnakeCtrl::setup()
+uint8_t ctrl::SnakeCtrl::setup()
 {
     SNAKE.headcolor = CRGB::Red;
     SNAKE.bodycolor = CRGB::Green;
@@ -30,7 +30,7 @@ uint8_t snake::SnakeCtrl::setup()
     return 0;
 }
 
-uint8_t snake::SnakeCtrl::loop()
+uint8_t ctrl::SnakeCtrl::loop()
 {
     /*while(true) {
         if buttons.loop() {
@@ -38,15 +38,16 @@ uint8_t snake::SnakeCtrl::loop()
         }
     }*/
     //TODO: implement
+    isExit(buttons.get_state());
     return 0;
 }
 
-uint8_t snake::SnakeCtrl::printMap()
+uint8_t ctrl::SnakeCtrl::printMap()
 {
     return 0;
 }
 
-void snake::SnakeCtrl::changeDirection(uint8_t button) {
+void ctrl::SnakeCtrl::changeDirection(uint8_t button) {
     /*
       W
     A + D
@@ -56,23 +57,24 @@ void snake::SnakeCtrl::changeDirection(uint8_t button) {
     4 + 2
       3
     */
-    switch (button) {
-    case 'w':
-        SNAKE.direction = 0;
-        break;
-    case 'a':
-        SNAKE.direction = 1;
-        break;
-    case 's':
-        SNAKE.direction = 2;
-        break;
-    case 'd':
-        SNAKE.direction = 3;
-        break;
-    }
+    pressed_buttons = buttons.get_state();
+    if (buttons)
+    
+    //     SNAKE.direction = 0;
+    //     break;
+    // case 'a':
+    //     SNAKE.direction = 1;
+    //     break;
+    // case 's':
+    //     SNAKE.direction = 2;
+    //     break;
+    // case 'd':
+    //     SNAKE.direction = 3;
+    //     break;
+    
 }
 
-uint8_t snake::SnakeCtrl::updateView()
+uint8_t ctrl::SnakeCtrl::updateView()
 {
     /*
         OBEN
@@ -101,7 +103,7 @@ uint8_t snake::SnakeCtrl::updateView()
     return 0;
 }
 // Moves snake head to new location
-void snake::SnakeCtrl::generateFood()
+void ctrl::SnakeCtrl::generateFood()
 {
     uint8_t x = 0;
     uint8_t y = 0;
@@ -119,7 +121,7 @@ void snake::SnakeCtrl::generateFood()
     // Place new food
     map[x][y] = 254;
 }
-uint8_t snake::SnakeCtrl::move(uint8_t dx, uint8_t dy)
+uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
 {
     // determine new head position
     uint8_t newx = SNAKE.xpos + dx;

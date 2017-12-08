@@ -3,13 +3,19 @@
 #include "../../util.h"
 #include <stdint.h>
 #include "../../hw/led_matrix/led_matrix.h"
-namespace snake
+#include "../../hw/buttons/buttons.h"
+namespace ctrl
 {
 
 class SnakeCtrl
 {
   public:
-    SnakeCtrl() {}
+     SnakeCtrl(
+        hw::LEDMatrix &led_matrix,
+        hw::Buttons &buttons) : 
+        led_matrix(led_matrix),
+        buttons(buttons)
+        {}
 
     NO_COPY_INSTANCE(SnakeCtrl)
 
@@ -32,7 +38,9 @@ class SnakeCtrl
         uint8_t xpos;
         uint8_t ypos;
         uint8_t color;
-    };
+    } FOOD ;
+    hw::Buttons &buttons;
+    hw::LEDMatrix &led_matrix;
 
     // prints the snake map
     uint8_t printMap();
