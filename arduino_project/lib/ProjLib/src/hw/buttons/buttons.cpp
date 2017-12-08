@@ -22,7 +22,7 @@ uint8_t hw::Buttons::loop() {
 
     hw::Buttons::State new_state = 0;
     for(uint8_t i = 0; i < NUM_BTNS; i++) { // I dont even know why this order is working
-         new_state |= ((digitalRead(pins[i]) == HIGH ? 1 : 0) << i);
+         new_state |= ((digitalRead(pins[i]) == LOW ? 1 : 0) << i);
     }
 
     hw::Buttons::State smoothed_state = state;
