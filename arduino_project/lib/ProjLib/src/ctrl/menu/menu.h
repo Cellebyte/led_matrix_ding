@@ -17,7 +17,8 @@ namespace ctrl {
             led_matrix(led_matrix),
             buttons(buttons),
             screen(0),
-            counter(0)
+            counter(0),
+            transition_offset(0)
         {}
 
         NO_COPY_INSTANCE(MenuCtrl)
@@ -29,11 +30,12 @@ namespace ctrl {
         hw::Buttons &buttons;
         uint8_t screen;
         uint8_t counter;
+        uint8_t transition_offset;
 
-        uint8_t show_1();
-        uint8_t show_2();
-        uint8_t show_3();
-        uint8_t show_4();
+        uint8_t show_1(int8_t offset);
+        uint8_t show_2(int8_t offset);
+        uint8_t show_3(int8_t offset);
+        uint8_t show_4(int8_t offset);
 
     };
 

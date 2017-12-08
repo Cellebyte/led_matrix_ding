@@ -15,12 +15,11 @@ hw::LEDMatrix::Rect snake_pic[] = {
 
 
 
-uint8_t ctrl::MenuCtrl::show_1() {
-    led_matrix.set_all(CRGB::Black);
-    led_matrix.show_rect(3,3, snake_pic[0]);
-    led_matrix.show_rect(8,4, snake_pic[1]);
-    led_matrix.show_rect(5,7, snake_pic[2]);
-    led_matrix.set_pixel(8,2, CRGB::Red);
+uint8_t ctrl::MenuCtrl::show_1(int8_t offset) {
+    led_matrix.show_rect((int8_t)3+offset,3, snake_pic[0]);
+    led_matrix.show_rect((int8_t)8+offset,4, snake_pic[1]);
+    led_matrix.show_rect((int8_t)5+offset,7, snake_pic[2]);
+    led_matrix.set_pixel((int8_t)8+offset,2, CRGB::Red);
 }
 
 hw::LEDMatrix::Rect clock_pic[] = {
@@ -44,17 +43,16 @@ hw::LEDMatrix::Rect clock_pic[] = {
     }
 };
 
-uint8_t ctrl::MenuCtrl::show_2() {
-    led_matrix.set_all(CRGB::Black);
-    led_matrix.show_rect(1,3, clock_pic[0]);
-    led_matrix.show_rect(1,4, clock_pic[1]);
-    led_matrix.show_rect(2,6, clock_pic[1]);
-    led_matrix.show_rect(5,4, clock_pic[2]);
-    led_matrix.show_rect(6,3, clock_pic[3]);
-    led_matrix.show_rect(6,4, clock_pic[4]);
-    led_matrix.show_rect(7,3, clock_pic[5]);
-    led_matrix.set_pixel(6,5, CRGB::Red);
-    led_matrix.set_pixel(7,5, CRGB::Blue);
+uint8_t ctrl::MenuCtrl::show_2(int8_t offset) {
+    led_matrix.show_rect((int8_t)1+offset,3, clock_pic[0]);
+    led_matrix.show_rect((int8_t)1+offset,4, clock_pic[1]);
+    led_matrix.show_rect((int8_t)2+offset,6, clock_pic[1]);
+    led_matrix.show_rect((int8_t)5+offset,4, clock_pic[2]);
+    led_matrix.show_rect((int8_t)6+offset,3, clock_pic[3]);
+    led_matrix.show_rect((int8_t)6+offset,4, clock_pic[4]);
+    led_matrix.show_rect((int8_t)7+offset,3, clock_pic[5]);
+    led_matrix.set_pixel((int8_t)6+offset,5, CRGB::Red);
+    led_matrix.set_pixel((int8_t)7+offset,5, CRGB::Blue);
 
     return 0;
 }
@@ -68,14 +66,13 @@ hw::LEDMatrix::Rect pong_pic[] = {
     }
 };
 
-uint8_t ctrl::MenuCtrl::show_3() {
-    led_matrix.set_all(CRGB::Black);
-    led_matrix.show_rect(1,3, clock_pic[0]);
-    led_matrix.show_rect(1,4, clock_pic[1]);
-    led_matrix.show_rect(1,6, clock_pic[1]);
-    led_matrix.show_rect(5,5, pong_pic[0]);
-    led_matrix.show_rect(8,3, pong_pic[1]);
-    led_matrix.set_pixel(7,4, CRGB::Red);
+uint8_t ctrl::MenuCtrl::show_3(int8_t offset) {
+    led_matrix.show_rect((int8_t)1+offset,3, clock_pic[0]);
+    led_matrix.show_rect((int8_t)1+offset,4, clock_pic[1]);
+    led_matrix.show_rect((int8_t)1+offset,6, clock_pic[1]);
+    led_matrix.show_rect((int8_t)5+offset,5, pong_pic[0]);
+    led_matrix.show_rect((int8_t)8+offset,3, pong_pic[1]);
+    led_matrix.set_pixel((int8_t)7+offset,4, CRGB::Red);
 
     return 0;
 }
@@ -98,14 +95,13 @@ CRGB random_color[] = {
     CRGB::Red
 };
 
-uint8_t ctrl::MenuCtrl::show_4() {
-    led_matrix.set_all(CRGB::Black);
-    led_matrix.show_rect(1,3, clock_pic[0]);
-    led_matrix.show_rect(2,3, random_pic[0]);
-    led_matrix.show_rect(1,6, random_pic[1]);
+uint8_t ctrl::MenuCtrl::show_4(int8_t offset) {
+    led_matrix.show_rect((int8_t)1+offset,3, clock_pic[0]);
+    led_matrix.show_rect((int8_t)2+offset,3, random_pic[0]);
+    led_matrix.show_rect((int8_t)1+offset,6, random_pic[1]);
     for(uint8_t c=0; c<6; c++) {
         for(uint8_t i=0; i<4; i++) {
-            uint8_t x = 5 + i;
+            uint8_t x = (int8_t)5 + i +offset;
             uint8_t y = 3 + c - i;
             led_matrix.set_pixel(x, y, random_color[c]);
         }
@@ -119,17 +115,65 @@ uint8_t ctrl::MenuCtrl::setup() {
 }
 
 uint8_t ctrl::MenuCtrl::loop() {
+    led_matrix.set_all(CRGB::Black);
     switch(screen) {
-        case 0: show_1(); break;
-        case 1: show_2(); break;
-        case 2: show_3(); break;
-        case 3: show_4(); break;
-        default: show_1();
+        case 0:
+            show_1(0); break;
+        case 1:
+            show_1((-1) * transition_offset);
+            show_2(((-1) * transition_offset) + 9);
+            break; // transition
+        case 2: show_2(0); break;
+        case 3:
+            show_2(((-1) * transition_offset));
+            show_3(((-1) * transition_offset) + 9);
+            break; // transition
+        case 4: show_3(0); break;
+        case 5:
+            show_3(((-1) * transition_offset));
+            show_4(((-1) * transition_offset) + 9);
+            break; // transition
+        case 6: show_4(0); break;
+        case 7:
+            show_4(((-1) * transition_offset));
+            show_1(((-1) * transition_offset) + 9);
+            break; // transition
+        default: led_matrix.set_all(CRGB::Red);
     }
+
+
     counter = (counter + 1) % 100;
-    if(counter==0) {
-        screen = (screen + 1) % 4;
+    bool in_transition =
+        (1==screen
+        || 3==screen
+        || 5==screen
+        || 7==screen);
+
+    if(!in_transition && counter%100==0) {
+        screen = (screen + 1) % 8;
+        transition_offset = 0;
+        return 0;
     }
+
+    if(in_transition && counter%10==0) {
+        transition_offset = (transition_offset + 1) % 10;
+        if(transition_offset == 0) {
+            in_transition = false;
+            screen = (screen + 1) % 8;
+            transition_offset = 0;
+            return 0;
+        }
+
+    }
+/*
+    counter = (counter + 1) % 100;
+    if(counter%10 == 0) {
+        transition_offset = (transition_offset + 1) % 10;
+    }
+
+    show_3((-1) * transition_offset);
+    show_4(((-1) * transition_offset) + 9); // magic number 9
+*/
     return 0;
 }
 
