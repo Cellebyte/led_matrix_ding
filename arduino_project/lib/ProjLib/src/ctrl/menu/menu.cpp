@@ -165,12 +165,13 @@ uint8_t ctrl::MenuCtrl::loop() {
 
     //launch app if button pressed
     if(!in_transition &&
-            wait_for_release_next
+            wait_for_release_select
             && !(b_state & hw::Buttons::State::BTN_B3)) {
         wait_for_release_select = false;
+        uint8_t selected_screen = screen;
         screen = 0; // reset to first screen
         transition_offset = 0;
-        return screen;
+        return selected_screen;
     }
     if(!in_transition
         && (b_state & hw::Buttons::State::BTN_B3)) {
@@ -184,11 +185,11 @@ uint8_t ctrl::MenuCtrl::loop() {
             in_transition = false;
             screen = (screen + 1) % 8;
             transition_offset = 0;
-            return 0;
+            return 255;
         }
 
     }
 
-    return 0;
+    return 255;
 }
 

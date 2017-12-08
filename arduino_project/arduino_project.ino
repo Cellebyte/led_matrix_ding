@@ -14,12 +14,54 @@ void setup() {
     Serial.begin(9600);
 }
 
+uint8_t app = 255;
+
 void loop() {
     buttons.loop();
 
-    snake.loop();
-    //menu.loop();
+    switch(app) {
+
+        case 0:
+        {
+            uint8_t r = snake.loop();
+            if(r==1) {
+                app = 255;
+            }
+        }
+            break;
+        case 1:
+        {
+            app = 255;
+        }
+            break;
+        case 2:
+        {
+            app = 255;
+        }
+            break;
+        case 3:
+        {
+            app = 255;
+        }
+            break;
+        case 255:
+        {
+            uint8_t next = menu.loop();
+            if(255==next){
+                app = 255;
+            } else {
+                snake.setup(); //reset snake
+                app = next / 2;
+                led_matrix.set_pixel(0,0, CRGB::Blue);
+            }
+        }
+            break;
+        default:
+            led_matrix.set_all(CRGB::Blue);
+
+    }
 
     led_matrix.loop();
     delay(10);
+    //Serial.println((buttons.get_state()&hw::Buttons::State::BTN_B3));
 }
