@@ -119,7 +119,17 @@ uint8_t ctrl::MenuCtrl::setup() {
 }
 
 uint8_t ctrl::MenuCtrl::loop() {
-    show_4();
+    switch(screen) {
+        case 0: show_1(); break;
+        case 1: show_2(); break;
+        case 2: show_3(); break;
+        case 3: show_4(); break;
+        default: show_1();
+    }
+    counter = (counter + 1) % 100;
+    if(counter==0) {
+        screen = (screen + 1) % 4;
+    }
     return 0;
 }
 

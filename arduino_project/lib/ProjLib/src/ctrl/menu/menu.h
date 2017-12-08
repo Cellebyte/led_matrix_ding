@@ -15,7 +15,9 @@ namespace ctrl {
             hw::Buttons &buttons
         ) :
             led_matrix(led_matrix),
-            buttons(buttons)
+            buttons(buttons),
+            screen(0),
+            counter(0)
         {}
 
         NO_COPY_INSTANCE(MenuCtrl)
@@ -25,6 +27,8 @@ namespace ctrl {
     private:
         hw::LEDMatrix &led_matrix;
         hw::Buttons &buttons;
+        uint8_t screen;
+        uint8_t counter;
 
         uint8_t show_1();
         uint8_t show_2();
