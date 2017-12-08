@@ -1,8 +1,10 @@
 #pragma once
+
+#include "Arduino.h"
+#include "FastLED.h"
+#include "../../util.h"
 #include "../../hw/led_matrix/led_matrix.h"
 #include "../../hw/buttons/buttons.h"
-#include "../../util.h"
-
 
 namespace ctrl {
 
@@ -18,25 +20,17 @@ namespace ctrl {
 
         NO_COPY_INSTANCE(MenuCtrl)
 
-        uint8_t setup()
-        {
-
-            //TODO: unimplemented
-            return 0;
-        }
-        uint8_t loop() {
-            //TODO: unimplemented
-            //hw::LEDMatrix::Rect r = hw::LEDMatrix::Rect {
-            //    1, 1, CRGB::Red
-            //};
-            //led_matrix.show_rect(0,0, r);
-            //for (int i=0)
-            led_matrix.set_pixel(0,0,CRGB::Blue);
-            return 0;
-        }
+        uint8_t setup();
+        uint8_t loop();
     private:
         hw::LEDMatrix &led_matrix;
         hw::Buttons &buttons;
+
+        uint8_t show_1();
+        uint8_t show_2();
+        uint8_t show_3();
+        uint8_t show_4();
+
     };
 
 }

@@ -37,16 +37,16 @@ uint8_t hw::LEDMatrix::show_rect(
     const uint8_t y,
     const hw::LEDMatrix::Rect &rect)
 {
-    if (LED_COLUMNS <= x
+    /*if (LED_COLUMNS <= x
         || LED_COLUMNS < x + rect.width
         || LED_ROWS <= y
         || LED_ROWS < y + rect.height)
     {
         return 1;
-    }
+    }*/
 
     for(uint8_t x_i = x; x_i < x + rect.width; x_i++) {
-        for(uint8_t y_i = x; y_i < y + rect.height; y_i++) {
+        for(uint8_t y_i = y; y_i < y + rect.height; y_i++) {
             set_pixel(x_i, y_i, rect.color);
         }
     }

@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../../util.h"
-
 #include "Arduino.h"
-
 #include "FastLED.h"
+#include "../../util.h"
 
 
 #define LED_ROWS 10
@@ -19,7 +17,7 @@ namespace hw {
     public:
         LEDMatrix(){}
 
-        NO_COPY_INSTANCE(LEDMatrix)
+        NO_COPY_INSTANCE(LEDMatrix);
 
         struct Rect {
             uint8_t width;
