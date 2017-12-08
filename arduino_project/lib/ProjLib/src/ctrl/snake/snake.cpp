@@ -43,6 +43,7 @@ uint8_t ctrl::SnakeCtrl::loop()
         clearScreen();
         printMap();
     }
+    timer++;
     if (isExit(buttons.get_state())) return 1;
     return 0;
 }
@@ -160,7 +161,7 @@ CRGB ctrl::SnakeCtrl::getColor(uint8_t value)
     // Returns a part of snake body
     if (value > 1 && value < 254)
         return SNAKE.bodycolor;
-    else if (value == 1) 
+    else if (value == 1)
         return SNAKE.headcolor;
     else if (value == 254)
         return FOOD_COLOR;

@@ -15,12 +15,13 @@ class SnakeCtrl
   public:
      SnakeCtrl(
         hw::LEDMatrix &led_matrix,
-        hw::Buttons &buttons) : 
+        hw::Buttons &buttons) :
+        timer(0),
         led_matrix(led_matrix),
         buttons(buttons)
         {}
 
-    NO_COPY_INSTANCE(SnakeCtrl)
+    NO_COPY_INSTANCE(SnakeCtrl);
 
     uint8_t setup();
     uint8_t loop();
@@ -33,12 +34,12 @@ class SnakeCtrl
         uint8_t ypos;
         uint8_t direction;
         uint8_t length;
-        const CRGB headcolor;
-        const CRGB bodycolor;
+        CRGB headcolor;
+        CRGB bodycolor;
     } SNAKE;
     uint8_t timer;
-    hw::Buttons &buttons;
     hw::LEDMatrix &led_matrix;
+    hw::Buttons &buttons;
 
     // prints the snake map
     uint8_t printMap();

@@ -6,8 +6,6 @@
 #include "../../util.h"
 #include <stdint.h>
 
-#define NUM_LEDS 100
-
 extern CRGBPalette16 myRedWhiteBluePalette;
 const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
 {
@@ -15,12 +13,12 @@ const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
     CRGB::Gray, // 'white' is too bright compared to red and blue
     CRGB::Blue,
     CRGB::Black,
-    
+
     CRGB::Red,
     CRGB::Gray,
     CRGB::Blue,
     CRGB::Black,
-    
+
     CRGB::Red,
     CRGB::Red,
     CRGB::Gray,
@@ -37,7 +35,7 @@ namespace ctrl
 class RainbowCtrl
 {
   public:
-    RainbowCtrl(hw::LEDMatrix &led_matrix, hw::Buttons &buttons): led_matrix(led_matrix), buttons(buttons) {}
+    RainbowCtrl(hw::LEDMatrix &led_matrix, hw::Buttons &buttons): led_matrix(led_matrix), buttons(buttons), timer(0) {}
 
     NO_COPY_INSTANCE(RainbowCtrl);
 
@@ -47,15 +45,15 @@ class RainbowCtrl
   private:
     CRGBPalette16 currentPalette;
     TBlendType    currentBlending;
-    hw::Buttons &buttons;
     hw::LEDMatrix &led_matrix;
-    uint8_t i;
+    hw::Buttons &buttons;
+    uint8_t timer;
     void FillLEDsFromPaletteColors(uint8_t colorIndex);
     void ChangePalettePeriodically();
     void SetupTotallyRandomPalette();
     void SetupBlackAndWhiteStripedPalette();
     void SetupPurpleAndGreenPalette();
-    
-    
+
+
 };
 }

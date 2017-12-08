@@ -23,7 +23,7 @@ namespace ctrl {
             wait_for_release_select(false)
         {}
 
-        NO_COPY_INSTANCE(MenuCtrl)
+        NO_COPY_INSTANCE(MenuCtrl);
 
         uint8_t setup();
         uint8_t loop();
