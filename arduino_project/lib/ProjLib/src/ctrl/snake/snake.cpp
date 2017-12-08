@@ -4,25 +4,29 @@ uint8_t ctrl::SnakeCtrl::setup()
 {
     SNAKE.headcolor = CRGB::Red;
     SNAKE.bodycolor = CRGB::Green;
-    SNAKE.xpos = mapwidth / 2;
-    SNAKE.ypos = mapheight / 2;
+    SNAKE.xpos = MAP_WIDTH/ 2 -1;
+    SNAKE.ypos = MAP_HEIGHT/ 2 -1;
     SNAKE.length = 3;
     SNAKE.direction = 0;
     timer=0;
-
+    for (int x=0; x<MAP_WIDTH;x++) {
+        for (int y=0; y=MAP_HEIGHT; y++) {
+            map[0][0]=0;
+        }
+    }
     // Set Snake head onto the printMap
     map[SNAKE.xpos][SNAKE.ypos] = 1;
     // Places top and bottom walls
-    for (int x = 0; x < mapwidth; ++x)
+    for (int x = 0; x < MAP_WIDTH; ++x)
     {
-        map[x][0] = 255;
-        map[x][mapheight - 1] = 255;
+        map[x][0] = -1;
+        map[x][MAP_HEIGHT - 1] = -1;
     }
     // Places left and right walls
-    for (int y = 0; y < mapheight; y++)
+    for (int y = 0; y < MAP_HEIGHT; y++)
     {
-        map[0][y] = 255;
-        map[mapwidth - 1][y] = 255;
+        map[0][y] = -1;
+        map[MAP_WIDTH - 1][y] = -1;
     }
     // 0 is a wall and 11 is a wall (1-10)
     // So 10 x 10 is the playable area
@@ -39,7 +43,7 @@ uint8_t ctrl::SnakeCtrl::loop()
     if (timer > 9)
     {
         timer=0;
-        if (updateView()) return 2;
+        updateView();
         clearScreen();
         printMap();
     }
@@ -50,9 +54,9 @@ uint8_t ctrl::SnakeCtrl::loop()
 
 uint8_t ctrl::SnakeCtrl::printMap()
 {
-    for (uint8_t y = 1; y < mapheight-1; y++)
+    for (uint8_t y = 1; y < MAP_HEIGHT-1; y++)
     {
-        for(uint8_t x = 1; x < mapwidth-1; x++)
+        for(uint8_t x = 1; x < MAP_WIDTH-1; x++)
         {
                 led_matrix.set_pixel(x,y,getColor(map[x][y]));
         }
@@ -89,6 +93,7 @@ uint8_t ctrl::SnakeCtrl::updateView()
           1
     */
     // Move in direction indicated
+    Serial.println(SNAKE.direction);
     switch (SNAKE.direction)
     {
     case 0:
@@ -104,7 +109,11 @@ uint8_t ctrl::SnakeCtrl::updateView()
         if (move(0, -1)) return 1;
         break;
     }
-    return 0;
+
+    // Reduce snake values on map by 1
+    for (int i = 0; i < MAP_HEIGHT*MAP_WIDTH; i++) {
+        if (map[i%MAP_WIDTH + 1][i/MAP_HEIGHT + 1] > 0) map[i%MAP_WIDTH][i/MAP_HEIGHT]--;
+    }
 }
 // Moves snake head to new location
 void ctrl::SnakeCtrl::generateFood()
@@ -115,15 +124,15 @@ void ctrl::SnakeCtrl::generateFood()
     {
         // Generate random x and y values within the map
         randomSeed(analogRead(0));
-        x = random(1, mapwidth - 1);
+        x = random(1, MAP_WIDTH - 1);
         randomSeed(analogRead(0));
-        y = random(1, mapheight);
+        y = random(1, MAP_HEIGHT - 1);
 
         // If location is not free try again
     } while (map[x][y] != 0);
 
     // Place new food
-    map[x][y] = 254;
+    map[x][y] = -2;
 }
 uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
 {
@@ -132,18 +141,17 @@ uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
     uint8_t newy = SNAKE.ypos + dy;
     uint8_t food = 0;
 
-    // Check if snake runs into a wall (indicated by 255 in map)
-    if (map[newx][newy] == 255)
+    // Check if snake runs into a wall (indicated by -1 in map)
+    if (map[newx][newy] == -1)
     {
         return 1;
     }
-    // Check if snake runs into food (indicated by 254 in map)
-    else if (map[newx][newy] == 254)
+    // Check if snake runs into food (indicated by -2 in map)
+    else if (map[newx][newy] == -2)
     {
         food = 1;
     }
-
-    // Check for food in that location
+    
     map[newx][newy] = 0;
     // Move head to new location and add the food to the length
     SNAKE.xpos = newx;
@@ -156,14 +164,18 @@ void ctrl::SnakeCtrl::clearScreen(){
     led_matrix.set_all(CRGB::Black);
 }
 
-CRGB ctrl::SnakeCtrl::getColor(uint8_t value)
+CRGB ctrl::SnakeCtrl::getColor(int8_t value)
 {
-    // Returns a part of snake body
-    if (value > 1 && value < 254)
-        return SNAKE.bodycolor;
-    else if (value == 1)
-        return SNAKE.headcolor;
-    else if (value == 254)
-        return FOOD_COLOR;
-    return 0;
+    switch(value) {
+        case 0:
+            return CRGB::Black;
+        case -1:
+            return SNAKE.headcolor;
+        case 1:
+            return SNAKE.headcolor;
+        case -2:
+            return FOOD_COLOR;
+        default:
+            return SNAKE.bodycolor;
+    }
 }

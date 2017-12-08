@@ -6,6 +6,8 @@
 #include "../../hw/led_matrix/led_matrix.h"
 #include "../../hw/buttons/buttons.h"
 #define FOOD_COLOR CRGB::Purple
+#define MAP_WIDTH 12
+#define MAP_HEIGHT 12
 
 namespace ctrl
 {
@@ -48,13 +50,10 @@ class SnakeCtrl
     // clears the screen after one iteration
     void clearScreen();
 
-    CRGB getColor(uint8_t);
+    CRGB getColor(int8_t);
     uint8_t move(uint8_t, uint8_t);
     void generateFood();
     void changeDirection();
-    // Map Dimension
-    static const uint8_t mapwidth = 12;
-    static const uint8_t mapheight = 12;
-    uint8_t map [mapwidth][mapheight] = {};
+    int8_t map [MAP_WIDTH][MAP_HEIGHT] = {};
 };
 }
