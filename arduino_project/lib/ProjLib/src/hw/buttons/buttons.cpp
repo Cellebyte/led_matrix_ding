@@ -17,10 +17,33 @@ uint8_t hw::Buttons::setup() {
 }
 
 uint8_t hw::Buttons::loop() {
+
+    counter = (counter+1) % 100;
+
     hw::Buttons::State new_state = 0;
     for(uint8_t i = 0; i < NUM_BTNS; i++) {
          new_state |= ((digitalRead(pins[i]) == HIGH ? 1 : 0) << i);
     }
-    state = new_state;
+
+    hw::Buttons::State smoothed_state = state;
+
+    for(uint8_t i = 0; i < NUM_BTNS; i++) {
+        if(new_state & (1<<i)) {
+            counter_low[i] = 0;
+            counter_high[i] += 1;
+        } else {
+            counter_high[i] = 0;
+            counter_low[i] += 1;
+        }
+        if(counter_high[i] >= DEBOUNCE) {
+            smoothed_state |= (1<<i);
+        } else if(counter_low[i] >= DEBOUNCE) {
+            smoothed_state &= ~(1<<i);
+        }
+    }
+
+
+
+    state = smoothed_state;
     return 0;
 }

@@ -20,6 +20,7 @@ uint8_t ctrl::MenuCtrl::show_1(int8_t offset) {
     led_matrix.show_rect((int8_t)8+offset,4, snake_pic[1]);
     led_matrix.show_rect((int8_t)5+offset,7, snake_pic[2]);
     led_matrix.set_pixel((int8_t)8+offset,2, CRGB::Red);
+    return 0;
 }
 
 hw::LEDMatrix::Rect clock_pic[] = {
@@ -149,12 +150,34 @@ uint8_t ctrl::MenuCtrl::loop() {
         || 5==screen
         || 7==screen);
 
-    if(!in_transition && counter%100==0) {
+    hw::Buttons::State b_state = buttons.get_state();
+
+    // switch screen if butten pressed
+    if(wait_for_release_next
+            && !(b_state & hw::Buttons::State::BTN_B2)) {
+        wait_for_release_next = false;
         screen = (screen + 1) % 8;
         transition_offset = 0;
-        return 0;
+    }
+    if(b_state & hw::Buttons::State::BTN_B2) {
+        wait_for_release_next = true;
     }
 
+    //launch app if button pressed
+    if(!in_transition &&
+            wait_for_release_next
+            && !(b_state & hw::Buttons::State::BTN_B3)) {
+        wait_for_release_select = false;
+        screen = 0; // reset to first screen
+        transition_offset = 0;
+        return screen;
+    }
+    if(!in_transition
+        && (b_state & hw::Buttons::State::BTN_B3)) {
+        wait_for_release_select = true;
+    }
+
+    //do transition animation
     if(in_transition && counter%10==0) {
         transition_offset = (transition_offset + 1) % 10;
         if(transition_offset == 0) {
@@ -165,15 +188,7 @@ uint8_t ctrl::MenuCtrl::loop() {
         }
 
     }
-/*
-    counter = (counter + 1) % 100;
-    if(counter%10 == 0) {
-        transition_offset = (transition_offset + 1) % 10;
-    }
 
-    show_3((-1) * transition_offset);
-    show_4(((-1) * transition_offset) + 9); // magic number 9
-*/
     return 0;
 }
 

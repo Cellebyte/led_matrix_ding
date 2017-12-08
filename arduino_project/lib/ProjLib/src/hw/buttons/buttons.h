@@ -5,6 +5,8 @@
 
 #define NUM_BTNS 8
 
+#define DEBOUNCE 100
+
 namespace hw {
 
     class Buttons {
@@ -21,7 +23,10 @@ namespace hw {
         ) :
             state(State::None),
             pins { pin_a0, pin_a1, pin_a2, pin_a3,
-                pin_b0, pin_b1, pin_b2, pin_b3 }
+                pin_b0, pin_b1, pin_b2, pin_b3 },
+            counter(0),
+            counter_low { 0 },
+            counter_high { 0 }
         {}
 
         NO_COPY_INSTANCE(Buttons);
@@ -48,6 +53,9 @@ namespace hw {
     private:
         State state;
         uint8_t pins[NUM_BTNS];
+        uint8_t counter;
+        uint8_t counter_low[NUM_BTNS];
+        uint8_t counter_high[NUM_BTNS];
     };
 
 }

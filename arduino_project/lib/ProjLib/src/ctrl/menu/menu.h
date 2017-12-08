@@ -18,7 +18,9 @@ namespace ctrl {
             buttons(buttons),
             screen(0),
             counter(0),
-            transition_offset(0)
+            transition_offset(0),
+            wait_for_release_next(false),
+            wait_for_release_select(false)
         {}
 
         NO_COPY_INSTANCE(MenuCtrl)
@@ -31,6 +33,8 @@ namespace ctrl {
         uint8_t screen;
         uint8_t counter;
         uint8_t transition_offset;
+        bool wait_for_release_next;
+        bool wait_for_release_select;
 
         uint8_t show_1(int8_t offset);
         uint8_t show_2(int8_t offset);
