@@ -5,7 +5,7 @@
 
 #define NUM_BTNS 8
 
-#define DEBOUNCE 100
+#define DEBOUNCE 5
 
 namespace hw {
 

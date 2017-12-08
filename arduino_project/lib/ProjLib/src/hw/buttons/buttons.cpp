@@ -11,7 +11,7 @@
 
 uint8_t hw::Buttons::setup() {
     for(uint8_t i = 0; i < NUM_BTNS; i++) {
-        pinMode(i, INPUT_PULLUP);
+        pinMode(pins[i], INPUT_PULLUP);
     }
     return 0;
 }
@@ -21,7 +21,7 @@ uint8_t hw::Buttons::loop() {
     counter = (counter+1) % 100;
 
     hw::Buttons::State new_state = 0;
-    for(uint8_t i = 0; i < NUM_BTNS; i++) {
+    for(uint8_t i = 0; i < NUM_BTNS; i++) { // I dont even know why this order is working
          new_state |= ((digitalRead(pins[i]) == HIGH ? 1 : 0) << i);
     }
 

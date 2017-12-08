@@ -12,6 +12,8 @@ void setup() {
 
     menu.setup();
 
+    Serial.begin(9600);
+
 }
 
 uint8_t a = 0;
@@ -24,5 +26,6 @@ void loop() {
     menu.loop();
 
     delay(10);
+    Serial.println(buttons.get_state());
 
 }
