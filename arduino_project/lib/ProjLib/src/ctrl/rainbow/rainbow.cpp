@@ -5,7 +5,7 @@ uint8_t ctrl::RainbowCtrl::setup() {
     delay(3000); // power-up safety delay
     //FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
     //FastLED.setBrightness(BRIGHTNESS);
-    i=0;
+    timer=0;
     currentPalette = RainbowColors_p;
     currentBlending = LINEARBLEND;
     return 0;
@@ -14,14 +14,14 @@ uint8_t ctrl::RainbowCtrl::setup() {
 
 uint8_t ctrl::RainbowCtrl::loop()
 {
-    if (i > 6) {
-        i=0;
+    if (timer > 6) {
+        timer=0;
         ChangePalettePeriodically();
         static uint8_t startIndex = 0;
         startIndex = startIndex + 1; /* motion speed */
         FillLEDsFromPaletteColors(startIndex);
     }
-    i++;
+    timer++;
     if (isExit(buttons.get_state())) return 1;
     return 0;
 }

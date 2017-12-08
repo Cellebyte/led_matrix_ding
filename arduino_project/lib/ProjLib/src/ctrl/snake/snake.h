@@ -1,9 +1,12 @@
 #pragma once
 #include <Arduino.h>
+#include "FastLED.h"
 #include "../../util.h"
 #include <stdint.h>
 #include "../../hw/led_matrix/led_matrix.h"
 #include "../../hw/buttons/buttons.h"
+#define FOOD_COLOR CRGB::Purple
+
 namespace ctrl
 {
 
@@ -33,12 +36,7 @@ class SnakeCtrl
         const CRGB headcolor;
         const CRGB bodycolor;
     } SNAKE;
-    struct food
-    {
-        uint8_t xpos;
-        uint8_t ypos;
-        uint8_t color;
-    } FOOD ;
+    uint8_t timer;
     hw::Buttons &buttons;
     hw::LEDMatrix &led_matrix;
 
@@ -47,10 +45,12 @@ class SnakeCtrl
     //updates the snake map
     uint8_t updateView();
     // clears the screen after one iteration
-    uint8_t clearView();
+    void clearScreen();
+
+    CRGB getColor(uint8_t);
     uint8_t move(uint8_t, uint8_t);
     void generateFood();
-    void changeDirection(uint8_t);
+    void changeDirection();
     // Map Dimension
     static const uint8_t mapwidth = 12;
     static const uint8_t mapheight = 12;
