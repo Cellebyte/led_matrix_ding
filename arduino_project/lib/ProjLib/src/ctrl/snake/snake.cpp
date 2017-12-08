@@ -1,6 +1,6 @@
 #include "snake.h"
 
-uint8_t snake::SnakeCtrl::setup()
+uint8_t ctrl::SnakeCtrl::setup()
 {
     SNAKE.headcolor = CRGB::Red;
     SNAKE.bodycolor = CRGB::Green;
@@ -8,6 +8,7 @@ uint8_t snake::SnakeCtrl::setup()
     SNAKE.ypos = mapheight / 2;
     SNAKE.length = 3;
     SNAKE.direction = 0;
+    timer=0;
 
     // Set Snake head onto the printMap
     map[SNAKE.xpos][SNAKE.ypos] = 1;
@@ -30,49 +31,53 @@ uint8_t snake::SnakeCtrl::setup()
     return 0;
 }
 
-uint8_t snake::SnakeCtrl::loop()
+uint8_t ctrl::SnakeCtrl::loop()
 {
-    /*while(true) {
-        if buttons.loop() {
+    // return 1 == isExit
+    // return 2 == loseGame
+    changeDirection();
+    if (timer > 9)
+    {
+        timer=0;
+        if (updateView()) return 2;
+        clearScreen();
+        printMap();
+    }
+    if (isExit(buttons.get_state())) return 1;
+    return 0;
+}
 
+uint8_t ctrl::SnakeCtrl::printMap()
+{
+    for (uint8_t y = 1; y < mapheight-1; y++)
+    {
+        for(uint8_t x = 1; x < mapwidth-1; x++)
+        {
+                led_matrix.set_pixel(x,y,getColor(map[x][y]));
         }
-    }*/
-    //TODO: implement
+    }
     return 0;
 }
 
-uint8_t snake::SnakeCtrl::printMap()
-{
-    return 0;
-}
-
-void snake::SnakeCtrl::changeDirection(uint8_t button) {
+void ctrl::SnakeCtrl::changeDirection() {
     /*
       W
     A + D
       S
 
-      1
-    4 + 2
-      3
+        BTN_A1
+    BTN_A0 + BTN_A2
+        BTN_A3
     */
-    switch (button) {
-    case 'w':
-        SNAKE.direction = 0;
-        break;
-    case 'a':
-        SNAKE.direction = 1;
-        break;
-    case 's':
-        SNAKE.direction = 2;
-        break;
-    case 'd':
-        SNAKE.direction = 3;
-        break;
-    }
+    uint8_t pressed_buttons = buttons.get_state();
+    if (pressed_buttons & hw::Buttons::State::BTN_A1) SNAKE.direction = 3;
+    else if (pressed_buttons & hw::Buttons::State::BTN_A0) SNAKE.direction = 0;
+    else if (pressed_buttons & hw::Buttons::State::BTN_A3) SNAKE.direction = 1;
+    else if (pressed_buttons & hw::Buttons::State::BTN_A2) SNAKE.direction = 2;
+
 }
 
-uint8_t snake::SnakeCtrl::updateView()
+uint8_t ctrl::SnakeCtrl::updateView()
 {
     /*
         OBEN
@@ -86,22 +91,22 @@ uint8_t snake::SnakeCtrl::updateView()
     switch (SNAKE.direction)
     {
     case 0:
-        move(-1, 0);
+        if (move(-1, 0)) return 1;
         break;
     case 1:
-        move(0, 1);
+        if (move(0, 1)) return 1;
         break;
     case 2:
-        move(1, 0);
+         if (move(1, 0)) return 1;
         break;
     case 3:
-        move(0, -1);
+        if (move(0, -1)) return 1;
         break;
     }
     return 0;
 }
 // Moves snake head to new location
-void snake::SnakeCtrl::generateFood()
+void ctrl::SnakeCtrl::generateFood()
 {
     uint8_t x = 0;
     uint8_t y = 0;
@@ -119,7 +124,7 @@ void snake::SnakeCtrl::generateFood()
     // Place new food
     map[x][y] = 254;
 }
-uint8_t snake::SnakeCtrl::move(uint8_t dx, uint8_t dy)
+uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
 {
     // determine new head position
     uint8_t newx = SNAKE.xpos + dx;
@@ -129,7 +134,7 @@ uint8_t snake::SnakeCtrl::move(uint8_t dx, uint8_t dy)
     // Check if snake runs into a wall (indicated by 255 in map)
     if (map[newx][newy] == 255)
     {
-        return -1;
+        return 1;
     }
     // Check if snake runs into food (indicated by 254 in map)
     else if (map[newx][newy] == 254)
@@ -146,12 +151,18 @@ uint8_t snake::SnakeCtrl::move(uint8_t dx, uint8_t dy)
     return 0;
 }
 
-uint8_t getColor(uint8_t value)
+void ctrl::SnakeCtrl::clearScreen(){
+    led_matrix.set_all(CRGB::Black);
+}
+
+CRGB ctrl::SnakeCtrl::getColor(uint8_t value)
 {
     // Returns a part of snake body
-    if (value > 0 && value < 254)
-        return 'g';
+    if (value > 1 && value < 254)
+        return SNAKE.bodycolor;
+    else if (value == 1) 
+        return SNAKE.headcolor;
     else if (value == 254)
-        return 'b';
+        return FOOD_COLOR;
     return 0;
 }

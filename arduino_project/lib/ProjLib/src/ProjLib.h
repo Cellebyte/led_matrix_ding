@@ -7,3 +7,4 @@
 #include "hw/buttons/buttons.h"
 #include "ctrl/menu/menu.h"
 #include "ctrl/snake/snake.h"
+#include "ctrl/rainbow/rainbow.h"
