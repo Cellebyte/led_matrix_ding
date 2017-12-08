@@ -23,7 +23,8 @@ void loop() {
 
         case 0:
         {
-            if(snake.loop()) {
+            uint8_t r = snake.loop();
+            if(r==1) {
                 app = 255;
             }
         }
