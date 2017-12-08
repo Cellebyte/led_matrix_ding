@@ -31,6 +31,7 @@ namespace hw {
         uint8_t loop();
         uint8_t set_pixel(const uint8_t x, const uint8_t y, const CRGB color);
         uint8_t show_rect(const uint8_t x, const uint8_t y, const Rect& rect);
+        uint8_t set_all(const CRGB color);
 
     private:
 
