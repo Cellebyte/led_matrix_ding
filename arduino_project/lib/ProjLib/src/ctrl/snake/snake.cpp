@@ -2,29 +2,33 @@
 
 uint8_t ctrl::SnakeCtrl::setup()
 {
-    SNAKE.headcolor = CRGB::Red;
     SNAKE.bodycolor = CRGB::Green;
-    SNAKE.xpos = mapwidth / 2;
-    SNAKE.ypos = mapheight / 2;
+    SNAKE.xpos = 4;
+    SNAKE.ypos = 2;
     SNAKE.length = 3;
-    SNAKE.direction = 0;
-    timer=0;
-
+    SNAKE.direction = 4;
+    timer = 0;
+    for (int x = 0; x < MAP_WIDTH; x++)
+    {
+        for (int y = 0; y < MAP_HEIGHT; y++)
+        {
+            map[x][y] = 0;
+        }
+    }
     // Set Snake head onto the printMap
     map[SNAKE.xpos][SNAKE.ypos] = 1;
     // Places top and bottom walls
-    for (int x = 0; x < mapwidth; ++x)
+    for (int x = 0; x < MAP_WIDTH; ++x)
     {
-        map[x][0] = 255;
-        map[x][mapheight - 1] = 255;
+        map[x][0] = -1;
+        map[x][MAP_HEIGHT - 1] = -1;
     }
     // Places left and right walls
-    for (int y = 0; y < mapheight; y++)
+    for (int y = 0; y < MAP_HEIGHT; y++)
     {
-        map[0][y] = 255;
-        map[mapwidth - 1][y] = 255;
+        map[0][y] = -1;
+        map[MAP_WIDTH - 1][y] = -1;
     }
-    // 0 is a wall and 11 is a wall (1-10)
     // So 10 x 10 is the playable area
 
     generateFood();
@@ -36,31 +40,35 @@ uint8_t ctrl::SnakeCtrl::loop()
     // return 1 == isExit
     // return 2 == loseGame
     changeDirection();
-    if (timer > 9)
+    if (timer > 20)
     {
-        timer=0;
-        if (updateView()) return 2;
+
+        timer = 0;
+        if (updateView())
+            return 2;
         clearScreen();
         printMap();
     }
     timer++;
-    if (isExit(buttons.get_state())) return 1;
+    if (isExit(buttons.get_state()))
+        return 1;
     return 0;
 }
 
 uint8_t ctrl::SnakeCtrl::printMap()
 {
-    for (uint8_t y = 1; y < mapheight-1; y++)
+    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
     {
-        for(uint8_t x = 1; x < mapwidth-1; x++)
+        for (uint8_t x = 0; x < MAP_WIDTH; x++)
         {
-                led_matrix.set_pixel(x,y,getColor(map[x][y]));
+            led_matrix.set_pixel(x, y, getColor(map[x][y]));
         }
     }
     return 0;
 }
 
-void ctrl::SnakeCtrl::changeDirection() {
+void ctrl::SnakeCtrl::changeDirection()
+{
     /*
       W
     A + D
@@ -71,11 +79,14 @@ void ctrl::SnakeCtrl::changeDirection() {
         BTN_A3
     */
     uint8_t pressed_buttons = buttons.get_state();
-    if (pressed_buttons & hw::Buttons::State::BTN_A1) SNAKE.direction = 3;
-    else if (pressed_buttons & hw::Buttons::State::BTN_A0) SNAKE.direction = 0;
-    else if (pressed_buttons & hw::Buttons::State::BTN_A3) SNAKE.direction = 1;
-    else if (pressed_buttons & hw::Buttons::State::BTN_A2) SNAKE.direction = 2;
-
+    if (pressed_buttons & hw::Buttons::State::BTN_A1)
+        SNAKE.direction = 3;
+    else if (pressed_buttons & hw::Buttons::State::BTN_A0)
+        SNAKE.direction = 0;
+    else if (pressed_buttons & hw::Buttons::State::BTN_A3)
+        SNAKE.direction = 1;
+    else if (pressed_buttons & hw::Buttons::State::BTN_A2)
+        SNAKE.direction = 2;
 }
 
 uint8_t ctrl::SnakeCtrl::updateView()
@@ -92,17 +103,31 @@ uint8_t ctrl::SnakeCtrl::updateView()
     switch (SNAKE.direction)
     {
     case 0:
-        if (move(-1, 0)) return 1;
+        if (move(-1, 0))
+            return 1;
         break;
     case 1:
-        if (move(0, 1)) return 1;
+        if (move(0, 1))
+            return 1;
         break;
     case 2:
-         if (move(1, 0)) return 1;
+        if (move(1, 0))
+            return 1;
         break;
     case 3:
-        if (move(0, -1)) return 1;
+        if (move(0, -1))
+            return 1;
         break;
+    default:
+        return 0;
+        break;
+    }
+
+    // Reduce snake values on map by 1
+    for (int i = 0; i < MAP_HEIGHT * MAP_WIDTH; i++)
+    {
+        if (map[i % MAP_WIDTH][i / MAP_HEIGHT] > 0)
+            map[i % MAP_WIDTH][i / MAP_HEIGHT]--;
     }
     return 0;
 }
@@ -115,15 +140,15 @@ void ctrl::SnakeCtrl::generateFood()
     {
         // Generate random x and y values within the map
         randomSeed(analogRead(0));
-        x = random(1, mapwidth - 1);
+        x = random(0, MAP_WIDTH - 1);
         randomSeed(analogRead(0));
-        y = random(1, mapheight);
+        y = random(0, MAP_HEIGHT - 1);
 
         // If location is not free try again
     } while (map[x][y] != 0);
 
     // Place new food
-    map[x][y] = 254;
+    map[x][y] = -2;
 }
 uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
 {
@@ -132,38 +157,45 @@ uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
     uint8_t newy = SNAKE.ypos + dy;
     uint8_t food = 0;
 
-    // Check if snake runs into a wall (indicated by 255 in map)
-    if (map[newx][newy] == 255)
+    // Check if snake runs into a wall (indicated by -1 in map)
+    if (map[newx][newy] == -1)
     {
+        //Serial.print(newx);
+        //Serial.println(newy);
         return 1;
     }
-    // Check if snake runs into food (indicated by 254 in map)
-    else if (map[newx][newy] == 254)
+    // Check if snake runs into food (indicated by -2 in map)
+    else if (map[newx][newy] == -2)
     {
         food = 1;
+        generateFood();
     }
 
-    // Check for food in that location
     map[newx][newy] = 0;
     // Move head to new location and add the food to the length
     SNAKE.xpos = newx;
     SNAKE.ypos = newy;
     SNAKE.length = SNAKE.length + food;
+    map[SNAKE.xpos][SNAKE.ypos] = SNAKE.length + 1;
     return 0;
 }
 
-void ctrl::SnakeCtrl::clearScreen(){
+void ctrl::SnakeCtrl::clearScreen()
+{
     led_matrix.set_all(CRGB::Black);
 }
 
-CRGB ctrl::SnakeCtrl::getColor(uint8_t value)
+CRGB ctrl::SnakeCtrl::getColor(int8_t value)
 {
-    // Returns a part of snake body
-    if (value > 1 && value < 254)
-        return SNAKE.bodycolor;
-    else if (value == 1)
-        return SNAKE.headcolor;
-    else if (value == 254)
+    switch (value)
+    {
+    case 0:
+        return CRGB::Black;
+    case -1:
+        return CRGB::Gray;
+    case -2:
         return FOOD_COLOR;
-    return 0;
+    default:
+        return SNAKE.bodycolor;
+    }
 }

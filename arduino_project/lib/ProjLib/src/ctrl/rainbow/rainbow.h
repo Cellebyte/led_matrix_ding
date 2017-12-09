@@ -8,26 +8,25 @@
 
 extern CRGBPalette16 myRedWhiteBluePalette;
 const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM =
-{
-    CRGB::Red,
-    CRGB::Gray, // 'white' is too bright compared to red and blue
-    CRGB::Blue,
-    CRGB::Black,
+    {
+        CRGB::Red,
+        CRGB::Gray, // 'white' is too bright compared to red and blue
+        CRGB::Blue,
+        CRGB::Black,
 
-    CRGB::Red,
-    CRGB::Gray,
-    CRGB::Blue,
-    CRGB::Black,
+        CRGB::Red,
+        CRGB::Gray,
+        CRGB::Blue,
+        CRGB::Black,
 
-    CRGB::Red,
-    CRGB::Red,
-    CRGB::Gray,
-    CRGB::Gray,
-    CRGB::Blue,
-    CRGB::Blue,
-    CRGB::Black,
-    CRGB::Black
-};
+        CRGB::Red,
+        CRGB::Red,
+        CRGB::Gray,
+        CRGB::Gray,
+        CRGB::Blue,
+        CRGB::Blue,
+        CRGB::Black,
+        CRGB::Black};
 
 namespace ctrl
 {
@@ -35,7 +34,7 @@ namespace ctrl
 class RainbowCtrl
 {
   public:
-    RainbowCtrl(hw::LEDMatrix &led_matrix, hw::Buttons &buttons): led_matrix(led_matrix), buttons(buttons), timer(0) {}
+    RainbowCtrl(hw::LEDMatrix &led_matrix, hw::Buttons &buttons) : led_matrix(led_matrix), buttons(buttons), timer(0) {}
 
     NO_COPY_INSTANCE(RainbowCtrl);
 
@@ -44,7 +43,7 @@ class RainbowCtrl
 
   private:
     CRGBPalette16 currentPalette;
-    TBlendType    currentBlending;
+    TBlendType currentBlending;
     hw::LEDMatrix &led_matrix;
     hw::Buttons &buttons;
     uint8_t timer;
@@ -53,7 +52,5 @@ class RainbowCtrl
     void SetupTotallyRandomPalette();
     void SetupBlackAndWhiteStripedPalette();
     void SetupPurpleAndGreenPalette();
-
-
 };
 }
