@@ -2,7 +2,6 @@
 
 uint8_t ctrl::SnakeCtrl::setup()
 {
-    SNAKE.bodycolor = CRGB::Green;
     SNAKE.xpos = 4;
     SNAKE.ypos = 2;
     SNAKE.length = 3;
@@ -155,13 +154,11 @@ uint8_t ctrl::SnakeCtrl::move(uint8_t dx, uint8_t dy)
     // determine new head position
     uint8_t newx = SNAKE.xpos + dx;
     uint8_t newy = SNAKE.ypos + dy;
-    uint8_t food = 0;
+    int8_t food = 0;
 
     // Check if snake runs into a wall (indicated by -1 in map)
-    if (map[newx][newy] == -1)
+    if (map[newx][newy] == -1 || map[newx][newy] > 0)
     {
-        //Serial.print(newx);
-        //Serial.println(newy);
         return 1;
     }
     // Check if snake runs into food (indicated by -2 in map)
@@ -187,15 +184,19 @@ void ctrl::SnakeCtrl::clearScreen()
 
 CRGB ctrl::SnakeCtrl::getColor(int8_t value)
 {
-    switch (value)
+    if (SNAKE.length == value)
     {
+        return SNAKE_HEAD_COLOR;
+    }
+    switch (value)
+    {   
     case 0:
         return CRGB::Black;
     case -1:
-        return CRGB::Gray;
+        return SNAKE_BORDER_COLOR;
     case -2:
         return FOOD_COLOR;
     default:
-        return SNAKE.bodycolor;
+        return SNAKE_BODY_COLOR;
     }
 }
