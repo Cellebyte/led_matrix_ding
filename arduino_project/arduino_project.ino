@@ -3,8 +3,8 @@
 hw::LEDMatrix led_matrix;
 hw::Buttons buttons(4, 5, 6, 7, 8, 9, 10, 11);
 ctrl::MenuCtrl menu(led_matrix, buttons);
-ctrl::SnakeCtrl snake(led_matrix,buttons);
-ctrl::RainbowCtrl rainbow(led_matrix,buttons);
+ctrl::SnakeCtrl snake(led_matrix, buttons);
+ctrl::RainbowCtrl rainbow(led_matrix, buttons);
 ctrl::PongCtrl pong(led_matrix, buttons);
 
 void setup()
@@ -67,8 +67,11 @@ void loop()
     case 2:
     {
         uint8_t r = pong.loop();
-        if(r==1) {
+        if (r == 1)
+        {
             app = 255;
+            exit_and_to_menu(CRGB::Purple);
+            set_delay = 1;
         }
     }
     break;
@@ -91,16 +94,11 @@ void loop()
         }
         else
         {
-            uint8_t next = menu.loop();
-            if(255==next){
-                app = 255;
-            } else {
-                snake.setup(); //reset controllers
-                pong.setup();
-                rainbow.setup();
-                app = next / 2;
-                // led_matrix.set_pixel(0,0, CRGB::Blue);
-            }
+            snake.setup(); //reset controllers
+            pong.setup();
+            rainbow.setup();
+            app = next / 2;
+            // led_matrix.set_pixel(0,0, CRGB::Blue);
         }
     }
     break;
@@ -109,11 +107,14 @@ void loop()
     }
 
     led_matrix.loop();
+
     if (set_delay)
     {
         delay(2500);
         set_delay = 0;
     }
+
     delay(10);
+
     //Serial.println((buttons.get_state()&hw::Buttons::State::BTN_B3));
 }
