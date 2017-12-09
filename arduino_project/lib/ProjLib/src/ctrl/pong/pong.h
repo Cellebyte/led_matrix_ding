@@ -5,6 +5,8 @@
 #include "../../util.h"
 #include "../../hw/led_matrix/led_matrix.h"
 #include "../../hw/buttons/buttons.h"
+#define CURSERA_COLOR CRGB::Yellow
+#define CURSERB_COLOR CRGB::Cyan
 
 namespace ctrl
 {
@@ -40,11 +42,14 @@ private:
     int8_t pos;
   } CURSORA,CURSORB;
   uint8_t counter;
+  int8_t point_diff;
+
   uint8_t move_cursors();
   uint8_t move_ball();
   void show_cursors();
   void show_ball();
   void show_playfield();
   void clear_screen();
+  uint8_t update_points(uint8_t round_winner);
 };
 }

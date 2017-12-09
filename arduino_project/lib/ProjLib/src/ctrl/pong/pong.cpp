@@ -7,9 +7,9 @@
 
 hw::LEDMatrix::Rect ab_bars[] = {
     hw::LEDMatrix::Rect{
-        1, 3, CRGB::Yellow},
+        1, 3, CURSERA_COLOR},
     hw::LEDMatrix::Rect{
-        1, 3, CRGB::Cyan}};
+        1, 3, CURSERB_COLOR}};
 
 hw::LEDMatrix::Rect fence[] = {
     hw::LEDMatrix::Rect{
@@ -23,6 +23,7 @@ uint8_t ctrl::PongCtrl::setup()
     BALL.y = START_POS_Y;
     BALL.x_vel = 1;
     BALL.y_vel = 0;
+    point_diff = 0;
     return 0;
 }
 
@@ -108,7 +109,6 @@ uint8_t ctrl::PongCtrl::move_ball()
             new_vel_ball_x = (-1) * BALL.x_vel;
             new_vel_ball_y = 1;
         }
-
     }
     else if (8 == BALL.x)
     {
@@ -171,6 +171,40 @@ void ctrl::PongCtrl::show_playfield()
     led_matrix.show_rect(1, 0, fence[0]);
     led_matrix.show_rect(1, 9, fence[0]);
 }
+
+uint8_t ctrl::PongCtrl::update_points(uint8_t round_winner) {
+    if (2 == round_winner)
+    {
+        point_diff -= 1;
+    }
+    else if (3 == round_winner)
+    {
+        point_diff += 1;
+    }
+
+    if (point_diff >= 4)
+    {
+        return 2;
+    }
+    else if (point_diff <= -4)
+    {
+        return 3;
+    }
+
+    for(uint8_t i=0; i<8; i++) {
+
+        CRGB color;
+        if(i< 4 + point_diff) {
+            color = CURSERA_COLOR;
+        } else {
+            color = CURSERB_COLOR;
+        }
+        led_matrix.set_pixel(i+1, 9, color);
+    }
+
+    return 0;
+}
+
 uint8_t ctrl::PongCtrl::loop()
 {
 
@@ -182,9 +216,9 @@ uint8_t ctrl::PongCtrl::loop()
         show_playfield();
         move_cursors();
         uint8_t r = move_ball();
-        if (r)
-        {
-            Serial.println(r);
+        uint8_t s = update_points(r);
+        if(s) {
+            return s;
         }
     }
 
