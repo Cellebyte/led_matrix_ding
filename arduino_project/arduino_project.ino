@@ -97,7 +97,7 @@ void loop()
             snake.setup(); //reset controllers
             pong.setup();
             rainbow.setup();
-            app = next / 2;
+            app = next;
             // led_matrix.set_pixel(0,0, CRGB::Blue);
         }
     }

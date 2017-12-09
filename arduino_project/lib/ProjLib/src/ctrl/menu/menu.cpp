@@ -2,35 +2,27 @@
 #include "./menu.h"
 
 hw::LEDMatrix::Rect snake_pic[] = {
-    hw::LEDMatrix::Rect{
-        1, 5, CRGB::White},
-    hw::LEDMatrix::Rect{
-        1, 4, CRGB::Green},
-    hw::LEDMatrix::Rect{
-        3, 1, CRGB::Green}};
+    hw::LEDMatrix::Rect{1, 5, CRGB::White},
+    hw::LEDMatrix::Rect{1, 4, CRGB::Green},
+    hw::LEDMatrix::Rect{3, 1, CRGB::Green}};
 
 uint8_t ctrl::MenuCtrl::show_1(int8_t offset)
 {
     led_matrix.show_rect((int8_t)3 + offset, 3, snake_pic[0]);
     led_matrix.show_rect((int8_t)8 + offset, 4, snake_pic[1]);
     led_matrix.show_rect((int8_t)5 + offset, 7, snake_pic[2]);
-    led_matrix.set_pixel((int8_t)8 + offset, 2, CRGB::Red);
+    led_matrix.set_pixel((int8_t)8 + offset, 4, CRGB::GreenYellow);
+    led_matrix.set_pixel((int8_t)8 + offset, 2, CRGB::Purple);
     return 0;
 }
 
 hw::LEDMatrix::Rect clock_pic[] = {
-    hw::LEDMatrix::Rect{
-        3, 5, CRGB::White},
-    hw::LEDMatrix::Rect{
-        2, 1, CRGB::Black},
-    hw::LEDMatrix::Rect{
-        5, 3, CRGB::Blue},
-    hw::LEDMatrix::Rect{
-        3, 5, CRGB::Blue},
-    hw::LEDMatrix::Rect{
-        3, 3, CRGB::Black},
-    hw::LEDMatrix::Rect{
-        1, 2, CRGB::Red}};
+    hw::LEDMatrix::Rect{3, 5, CRGB::White},
+    hw::LEDMatrix::Rect{2, 1, CRGB::Black},
+    hw::LEDMatrix::Rect{5, 3, CRGB::Blue},
+    hw::LEDMatrix::Rect{3, 5, CRGB::Blue},
+    hw::LEDMatrix::Rect{3, 3, CRGB::Black},
+    hw::LEDMatrix::Rect{1, 2, CRGB::Red}};
 
 uint8_t ctrl::MenuCtrl::show_2(int8_t offset)
 {
@@ -48,10 +40,8 @@ uint8_t ctrl::MenuCtrl::show_2(int8_t offset)
 }
 
 hw::LEDMatrix::Rect pong_pic[] = {
-    hw::LEDMatrix::Rect{
-        1, 3, CRGB::Yellow},
-    hw::LEDMatrix::Rect{
-        1, 3, CRGB::Cyan}};
+    hw::LEDMatrix::Rect{1, 3, CRGB::Yellow},
+    hw::LEDMatrix::Rect{1, 3, CRGB::Cyan}};
 
 uint8_t ctrl::MenuCtrl::show_3(int8_t offset)
 {
@@ -102,8 +92,10 @@ uint8_t ctrl::MenuCtrl::setup()
     return 0;
 }
 
-uint8_t ctrl::MenuCtrl::loop()
+uint8_t ctrl::MenuCtrl::show_screen()
 {
+
+    // show current screen or state of transition animation
     led_matrix.set_all(CRGB::Black);
     switch (screen)
     {
@@ -111,58 +103,136 @@ uint8_t ctrl::MenuCtrl::loop()
         show_1(0);
         break;
     case 1:
-        show_1((-1) * transition_offset);
-        show_2(((-1) * transition_offset) + 9);
-        break; // transition
-    case 2:
         show_2(0);
         break;
-    case 3:
-        show_2(((-1) * transition_offset));
-        show_3(((-1) * transition_offset) + 9);
-        break; // transition
-    case 4:
+    case 2:
         show_3(0);
         break;
-    case 5:
-        show_3(((-1) * transition_offset));
-        show_4(((-1) * transition_offset) + 9);
-        break; // transition
-    case 6:
+    case 3:
         show_4(0);
         break;
-    case 7:
+
+    // transition to next
+    case 101:
+        show_1((-1) * transition_offset);
+        show_2(((-1) * transition_offset) + 9);
+        break; // transition 1-2
+    case 112:
+        show_2(((-1) * transition_offset));
+        show_3(((-1) * transition_offset) + 9);
+        break; // transition 2-3
+    case 123:
+        show_3(((-1) * transition_offset));
+        show_4(((-1) * transition_offset) + 9);
+        break; // transition 3-4
+    case 130:
         show_4(((-1) * transition_offset));
         show_1(((-1) * transition_offset) + 9);
-        break; // transition
-    case 8:
-        break; // transition
-    case 9:
-        break; // transition
-    case 10:
-        break; // transition
-    case 11:
-        break; // transition
+        break; // transition 4-1
+
+    // transition to prev
+    case 210:
+        show_2(transition_offset);
+        show_1(transition_offset - 9);
+        break; // transition 2-1
+    case 221:
+        show_3(transition_offset);
+        show_2(transition_offset - 9);
+        break; // transition 3-2
+    case 232:
+        show_4(transition_offset);
+        show_3(transition_offset - 9);
+        break; // transition 4-3
+    case 203:
+        show_1(transition_offset);
+        show_4(transition_offset - 9);
+        break; // transition 1-4
     default:
         led_matrix.set_all(CRGB::Red);
     }
+    return 0;
+}
+
+// state machine transitions for screens and transition animations
+
+uint8_t calc_next_screen(const uint8_t current_screen)
+{
+    switch(current_screen) {
+        case 0: return 101;
+        case 1: return 112;
+        case 2: return 123;
+        case 3: return 130;
+        case 101: return 1;
+        case 112: return 2;
+        case 123: return 3;
+        case 130: return 0;
+        case 210: return 0;
+        case 221: return 1;
+        case 232: return 2;
+        case 203: return 3;
+        default: return 0;
+    }
+}
+
+// reverse state machine transitions for screens and transition animations
+
+uint8_t calc_prev_screen(const uint8_t current_screen)
+{
+    switch(current_screen) {
+        case 0: return 203;
+        case 1: return 210;
+        case 2: return 221;
+        case 3: return 232;
+        case 101: return 0;
+        case 112: return 1;
+        case 123: return 2;
+        case 130: return 3;
+        //these have diferent behavior
+        case 210: return 0;
+        case 221: return 1;
+        case 232: return 2;
+        case 203: return 3;
+        default: return 0;
+    }
+}
+
+
+
+uint8_t ctrl::MenuCtrl::loop()
+{
+
+    show_screen();
 
     counter = (counter + 1) % 100;
-    bool in_transition =
-        (1 == screen || 3 == screen || 5 == screen || 7 == screen);
+    //TODo: fix this
+    bool in_transition = (screen >= 100);
 
     hw::Buttons::State b_state = buttons.get_state();
 
-    // switch screen if butten pressed
+    // switch to next screen if butten pressed
     if (wait_for_release_next && !(b_state & hw::Buttons::State::BTN_B2))
     {
         wait_for_release_next = false;
-        screen = (screen + 1) % 8;
+        //set to next screen or transition
+        screen = calc_next_screen(screen);
         transition_offset = 0;
     }
     if (b_state & hw::Buttons::State::BTN_B2)
     {
         wait_for_release_next = true;
+    }
+
+    // switch to prev screen if butten pressed
+    if (wait_for_release_prev && !(b_state & hw::Buttons::State::BTN_B0))
+    {
+        wait_for_release_prev = false;
+        // set to prev screen or transition
+        screen = calc_prev_screen(screen);
+        transition_offset = 0;
+    }
+    if (b_state & hw::Buttons::State::BTN_B0)
+    {
+        wait_for_release_prev = true;
     }
 
     //launch app if button pressed
@@ -187,7 +257,9 @@ uint8_t ctrl::MenuCtrl::loop()
         if (transition_offset == 0)
         {
             in_transition = false;
-            screen = (screen + 1) % 8;
+            //set next or prev screen here
+            //_next_ will work in both ways for transitions
+            screen = calc_next_screen(screen);
             transition_offset = 0;
             return 255;
         }

@@ -20,7 +20,8 @@ class MenuCtrl
                                 counter(0),
                                 transition_offset(0),
                                 wait_for_release_next(false),
-                                wait_for_release_select(false)
+                                wait_for_release_select(false),
+                                wait_for_release_prev(false)
     {
     }
 
@@ -37,10 +38,12 @@ class MenuCtrl
     uint8_t transition_offset;
     bool wait_for_release_next;
     bool wait_for_release_select;
+    bool wait_for_release_prev;
 
     uint8_t show_1(int8_t offset);
     uint8_t show_2(int8_t offset);
     uint8_t show_3(int8_t offset);
     uint8_t show_4(int8_t offset);
+    uint8_t show_screen();
 };
 }
