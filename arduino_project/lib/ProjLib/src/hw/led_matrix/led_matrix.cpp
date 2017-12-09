@@ -21,11 +21,14 @@ uint8_t hw::LEDMatrix::set_pixel(
 
     uint8_t index;
 
-    if(y & 0x01) { // odd row
+    if (y & 0x01)
+    { // odd row
         uint8_t reverseX = (LED_COLUMNS - 1) - x;
-        index = (y*LED_COLUMNS) + reverseX;
-    } else {
-        index = (y*LED_COLUMNS) + x;
+        index = (y * LED_COLUMNS) + reverseX;
+    }
+    else
+    {
+        index = (y * LED_COLUMNS) + x;
     }
 
     leds[index] = color;
@@ -38,8 +41,10 @@ uint8_t hw::LEDMatrix::show_rect(
     const hw::LEDMatrix::Rect &rect)
 {
 
-    for(int8_t x_i = x; x_i < x + rect.width; x_i++) {
-        for(int8_t y_i = y; y_i < y + rect.height; y_i++) {
+    for (int8_t x_i = x; x_i < x + rect.width; x_i++)
+    {
+        for (int8_t y_i = y; y_i < y + rect.height; y_i++)
+        {
             set_pixel(x_i, y_i, rect.color);
         }
     }
@@ -47,11 +52,13 @@ uint8_t hw::LEDMatrix::show_rect(
     return 0;
 }
 
-uint8_t hw::LEDMatrix::set_all(const CRGB color) {
-   for(uint8_t i=0; i<NUM_LEDS; i++) {
-       leds[i] = color;
-   }
-   return 0;
+uint8_t hw::LEDMatrix::set_all(const CRGB color)
+{
+    for (uint8_t i = 0; i < NUM_LEDS; i++)
+    {
+        leds[i] = color;
+    }
+    return 0;
 }
 
 uint8_t hw::LEDMatrix::loop()
