@@ -73,6 +73,18 @@ void loop()
             exit_and_to_menu(CRGB::Purple);
             set_delay = 1;
         }
+        else if (r==2)
+        {
+            app = 255;
+            exit_and_to_menu(CURSERA_COLOR);
+            set_delay = 1;
+        }
+        else if (r==3)
+        {
+            app = 255;
+            exit_and_to_menu(CURSERB_COLOR);
+            set_delay = 1;
+        }
     }
     break;
     case 3:
@@ -98,7 +110,7 @@ void loop()
             pong.setup();
             rainbow.setup();
             app = next;
-            // led_matrix.set_pixel(0,0, CRGB::Blue);
+            //led_matrix.set_pixel(0,0, CRGB::Blue);
         }
     }
     break;

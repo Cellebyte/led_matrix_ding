@@ -89,6 +89,8 @@ uint8_t ctrl::MenuCtrl::show_4(int8_t offset)
 
 uint8_t ctrl::MenuCtrl::setup()
 {
+    screen = 0;
+    transition_offset = 0;
     return 0;
 }
 
@@ -200,7 +202,6 @@ uint8_t calc_prev_screen(const uint8_t current_screen)
 
 uint8_t ctrl::MenuCtrl::loop()
 {
-
     show_screen();
 
     counter = (counter + 1) % 100;
