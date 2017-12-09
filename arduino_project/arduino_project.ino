@@ -5,12 +5,14 @@ hw::Buttons buttons(4,5,6,7,8,9,10,11);
 ctrl::MenuCtrl menu(led_matrix, buttons);
 ctrl::SnakeCtrl snake(led_matrix,buttons);
 ctrl::RainbowCtrl rainbow(led_matrix,buttons);
+ctrl::PongCtrl pong(led_matrix, buttons);
 
 void setup() {
     buttons.setup();
     led_matrix.setup();
     snake.setup();
     menu.setup();
+    pong.setup();
     Serial.begin(9600);
 }
 
@@ -36,7 +38,10 @@ void loop() {
             break;
         case 2:
         {
-            app = 255;
+            uint8_t r = pong.loop();
+            if(r==1) {
+                app = 255;
+            }
         }
             break;
         case 3:
@@ -50,7 +55,8 @@ void loop() {
             if(255==next){
                 app = 255;
             } else {
-                snake.setup(); //reset snake
+                snake.setup(); //reset controllers
+                pong.setup();
                 app = next / 2;
                 led_matrix.set_pixel(0,0, CRGB::Blue);
             }
