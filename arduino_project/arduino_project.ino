@@ -98,7 +98,7 @@ void loop()
             pong.setup();
             rainbow.setup();
             app = next;
-            // led_matrix.set_pixel(0,0, CRGB::Blue);
+            //led_matrix.set_pixel(0,0, CRGB::Blue);
         }
     }
     break;
