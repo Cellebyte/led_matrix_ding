@@ -6,8 +6,8 @@
 #include "../../hw/led_matrix/led_matrix.h"
 #include "../../hw/buttons/buttons.h"
 #define FOOD_COLOR CRGB::Purple
-#define MAP_WIDTH 12
-#define MAP_HEIGHT 12
+#define MAP_WIDTH 10
+#define MAP_HEIGHT 10
 
 namespace ctrl
 {
@@ -36,7 +36,6 @@ class SnakeCtrl
         uint8_t ypos;
         uint8_t direction;
         uint8_t length;
-        CRGB headcolor;
         CRGB bodycolor;
     } SNAKE;
     uint8_t timer;

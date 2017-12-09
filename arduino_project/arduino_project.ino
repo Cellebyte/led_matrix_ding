@@ -25,6 +25,10 @@ void loop() {
         {
             uint8_t r = snake.loop();
             if(r==1) {
+                led_matrix.set_pixel(0,0,CRGB::Purple);
+                app = 255;
+            } else if (r==2) {
+                led_matrix.set_pixel(0,0,CRGB::Red);
                 app = 255;
             }
         }
@@ -52,7 +56,6 @@ void loop() {
             } else {
                 snake.setup(); //reset snake
                 app = next / 2;
-                led_matrix.set_pixel(0,0, CRGB::Blue);
             }
         }
             break;
