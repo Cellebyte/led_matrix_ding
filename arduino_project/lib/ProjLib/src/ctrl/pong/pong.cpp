@@ -1,7 +1,7 @@
 #include "./pong.h"
 #define BALL_COLOR CRGB::Red
-#define POS_MAX 6
-#define POS_MIN 1
+#define POS_MAX 8
+#define POS_MIN -1
 #define START_POS_X 5
 #define START_POS_Y 4
 
@@ -13,7 +13,7 @@ hw::LEDMatrix::Rect ab_bars[] = {
 
 hw::LEDMatrix::Rect fence[] = {
     hw::LEDMatrix::Rect{
-        10, 1, CRGB::White}};
+        8, 1, CRGB::Grey}};
 
 uint8_t ctrl::PongCtrl::setup()
 {
@@ -80,13 +80,11 @@ void ctrl::PongCtrl::show_ball()
 
 uint8_t ctrl::PongCtrl::move_ball()
 {
-    int8_t new_pos_ball_x, new_pos_ball_y;
     int8_t new_vel_ball_x = BALL.x_vel;
     int8_t new_vel_ball_y = BALL.y_vel;
 
-    Serial.println(CURSORA.pos);
-    Serial.println(CURSORB.pos);
-    //TODO: verify
+    BALL.x = BALL.x + BALL.x_vel;
+    BALL.y = BALL.y + BALL.y_vel;
 
     //collisions
     if (1 == BALL.y || 8 == BALL.y)
@@ -110,6 +108,7 @@ uint8_t ctrl::PongCtrl::move_ball()
             new_vel_ball_x = (-1) * BALL.x_vel;
             new_vel_ball_y = 1;
         }
+
     }
     else if (8 == BALL.x)
     {
@@ -121,7 +120,6 @@ uint8_t ctrl::PongCtrl::move_ball()
         else if (CURSORB.pos + 1 == BALL.y)
         {
             new_vel_ball_x = (-1) * BALL.x_vel;
-            Serial.println(new_vel_ball_x);
             new_vel_ball_y = 0;
         }
         else if (CURSORB.pos + 2 == BALL.y)
@@ -135,29 +133,27 @@ uint8_t ctrl::PongCtrl::move_ball()
             new_vel_ball_y = BALL.y_vel;
         }
     }
-    else if (8 < BALL.x)
+    else if (9 < BALL.x)
     {
         BALL.x = START_POS_X;
         BALL.y = START_POS_Y;
-        return 2;
-    }
-    else if (1 > BALL.x)
-    {
-        BALL.x = START_POS_X;
-        BALL.y = START_POS_Y;
+        BALL.x_vel = 1;
+        BALL.y_vel = 0;
         return 3;
+    }
+    else if (0 > BALL.x)
+    {
+        BALL.x = START_POS_X;
+        BALL.y = START_POS_Y;
+        BALL.x_vel = -1;
+        BALL.y_vel = 0;
+        return 2;
     }
     else
     {
         new_vel_ball_x = BALL.x_vel;
         new_vel_ball_y = BALL.y_vel;
     }
-
-    new_pos_ball_x = BALL.x + new_vel_ball_x;
-    new_pos_ball_y = BALL.y + new_vel_ball_y;
-
-    BALL.x = new_pos_ball_x;
-    BALL.y = new_pos_ball_y;
     BALL.x_vel = new_vel_ball_x;
     BALL.y_vel = new_vel_ball_y;
 
@@ -172,8 +168,8 @@ void ctrl::PongCtrl::clear_screen()
 
 void ctrl::PongCtrl::show_playfield()
 {
-    led_matrix.show_rect(0, 0, fence[0]);
-    led_matrix.show_rect(0, 9, fence[0]);
+    led_matrix.show_rect(1, 0, fence[0]);
+    led_matrix.show_rect(1, 9, fence[0]);
 }
 uint8_t ctrl::PongCtrl::loop()
 {
@@ -188,6 +184,7 @@ uint8_t ctrl::PongCtrl::loop()
         uint8_t r = move_ball();
         if (r)
         {
+            Serial.println(r);
         }
     }
 
