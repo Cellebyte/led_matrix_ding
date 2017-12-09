@@ -45,7 +45,9 @@ void loop() {
             break;
         case 3:
         {
-            app = 255;
+            if(rainbow.loop()) {
+                app = 255;
+            }
         }
             break;
         case 255:
@@ -55,6 +57,7 @@ void loop() {
                 app = 255;
             } else {
                 snake.setup(); //reset snake
+                rainbow.setup();
                 app = next / 2;
             }
         }
