@@ -11,28 +11,40 @@ namespace ctrl
 
 class PongCtrl
 {
-  public:
-    PongCtrl(
-        hw::LEDMatrix &led_matrix,
-        hw::Buttons &buttons) : led_matrix(led_matrix),
-                                buttons(buttons),
-                                counter(0),
-                                pos_a(0),
-                                pos_b(0)
-    {
-    }
+public:
+  PongCtrl(
+      hw::LEDMatrix &led_matrix,
+      hw::Buttons &buttons) : led_matrix(led_matrix),
+                              buttons(buttons),
+                              counter(0)
+  {
+  }
 
-    NO_COPY_INSTANCE(PongCtrl);
+  NO_COPY_INSTANCE(PongCtrl);
 
-    uint8_t setup();
-    uint8_t loop();
+  uint8_t setup();
+  uint8_t loop();
 
-  private:
-    hw::LEDMatrix &led_matrix;
-    hw::Buttons &buttons;
-    uint8_t counter;
-    int8_t pos_a, pos_b;
-    int8_t pos_ball_x, pos_ball_y, vel_ball_x, vel_ball_y;
-    uint8_t input();
+private:
+  hw::LEDMatrix &led_matrix;
+  hw::Buttons &buttons;
+  struct ball
+  {
+    int8_t x;
+    int8_t y;
+    int8_t x_vel;
+    int8_t y_vel;
+  } BALL;
+  struct cursor
+  {
+    int8_t pos;
+  } CURSORA,CURSORB;
+  uint8_t counter;
+  uint8_t move_cursors();
+  uint8_t move_ball();
+  void show_cursors();
+  void show_ball();
+  void show_playfield();
+  void clear_screen();
 };
 }
