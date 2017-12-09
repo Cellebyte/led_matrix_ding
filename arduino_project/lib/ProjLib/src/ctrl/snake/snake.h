@@ -15,13 +15,13 @@ namespace ctrl
 class SnakeCtrl
 {
   public:
-     SnakeCtrl(
+    SnakeCtrl(
         hw::LEDMatrix &led_matrix,
-        hw::Buttons &buttons) :
-        timer(0),
-        led_matrix(led_matrix),
-        buttons(buttons)
-        {}
+        hw::Buttons &buttons) : timer(0),
+                                led_matrix(led_matrix),
+                                buttons(buttons)
+    {
+    }
 
     NO_COPY_INSTANCE(SnakeCtrl);
 
@@ -53,6 +53,6 @@ class SnakeCtrl
     uint8_t move(uint8_t, uint8_t);
     void generateFood();
     void changeDirection();
-    int8_t map [MAP_WIDTH][MAP_HEIGHT] = {};
+    int8_t map[MAP_WIDTH][MAP_HEIGHT] = {};
 };
 }
