@@ -62,6 +62,8 @@ void loop()
     case 1:
     {
         app = 255;
+        exit_and_to_menu(CRGB::Red);
+        set_delay = 1;
     }
     break;
     case 2:
