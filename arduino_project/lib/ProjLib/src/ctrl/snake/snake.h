@@ -39,7 +39,6 @@ private:
     uint8_t ypos;
     uint8_t direction;
     int8_t length;
-    CRGB bodycolor;
   } SNAKE;
   uint8_t timer;
   hw::LEDMatrix &led_matrix;
